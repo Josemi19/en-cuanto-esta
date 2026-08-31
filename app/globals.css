@@ -87,6 +87,28 @@ button {
     background: #e1f0ea;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calculator-link {
+    display: none;
+    padding: 9px 12px;
+    border: 1px solid #b9cbc6;
+    border-radius: 7px;
+    color: var(--green-dark);
+    background: transparent;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.calculator-link:hover {
+    border-color: var(--green);
+    background: #e1f0ea;
+}
+
 button:disabled {
     cursor: wait;
     opacity: .55;
@@ -125,7 +147,6 @@ h1 {
 }
 
 .quote {
-    min-height: 240px;
     padding: 24px;
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -414,6 +435,15 @@ footer {
         padding-bottom: 34px;
     }
 
+    .calculator-link {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .refresh {
+        display: none;
+    }
+
     .calculator {
         padding: 21px;
     }
@@ -445,10 +475,6 @@ footer {
 
     .quotes {
         grid-template-columns: 1fr;
-    }
-
-    .quote {
-        min-height: 270px;
     }
 
     .average-label {

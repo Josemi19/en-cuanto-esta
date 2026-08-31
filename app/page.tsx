@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Cotizacion = {
   moneda: string;
@@ -26,6 +26,7 @@ function formatValue(value: number | null) {
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("es-VE", {
+    timeZone: "America/Caracas",
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(date));
@@ -64,6 +65,7 @@ export default function Home() {
   const [conversionDirection, setConversionDirection] = useState<ConversionDirection>("toBs");
   const [amount, setAmount] = useState("0.00");
   const [customRate, setCustomRate] = useState("");
+  const calculatorRef = useRef<HTMLElement>(null);
 
   const isRefreshLocked = lockedUntil !== null;
   const selectedQuote = quotes.find((quote) => quote.moneda === calculatorMode);
@@ -83,10 +85,13 @@ export default function Home() {
     setError("");
 
     try {
-      const response = await fetch("/api/cotizaciones");
-      if (!response.ok) throw new Error("Request failed");
+      const responses = await Promise.all([
+        fetch("/api/cotizaciones?moneda=USD"),
+        fetch("/api/cotizaciones?moneda=EUR")
+      ]);
+      if (responses.some((response) => !response.ok)) throw new Error("Request failed");
 
-      const data: Cotizacion[] = await response.json();
+      const data: Cotizacion[] = await Promise.all(responses.map((response) => response.json()));
       setQuotes(data);
       setLastUpdated(new Date());
     } catch {
@@ -132,6 +137,10 @@ export default function Home() {
     void loadQuotes();
   }
 
+  function scrollToCalculator() {
+    calculatorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <main>
       <section className="shell" aria-labelledby="page-title">
@@ -140,15 +149,20 @@ export default function Home() {
             <span className="brand-mark" aria-hidden="true">$</span>
             <span>En cuanto esta</span>
           </div>
-          <button
-            className="refresh"
-            onClick={handleRefresh}
-            disabled={isLoading || isRefreshLocked}
-            aria-label={isRefreshLocked ? `Actualizaciones bloqueadas durante ${secondsRemaining} segundos` : "Actualizar cotizaciones"}
-          >
-            <span aria-hidden="true">&#8635;</span>
-            {isRefreshLocked ? `Disponible en ${secondsRemaining}s` : "Actualizar"}
-          </button>
+          <div className="header-actions">
+            <button className="calculator-link" onClick={scrollToCalculator} type="button">
+              Conversor
+            </button>
+            <button
+              className="refresh"
+              onClick={handleRefresh}
+              disabled={isLoading || isRefreshLocked}
+              aria-label={isRefreshLocked ? `Actualizaciones bloqueadas durante ${secondsRemaining} segundos` : "Actualizar cotizaciones"}
+            >
+              <span aria-hidden="true">&#8635;</span>
+              {isRefreshLocked ? `Disponible en ${secondsRemaining}s` : "Actualizar"}
+            </button>
+          </div>
         </header>
 
         <div className="intro">
@@ -183,7 +197,7 @@ export default function Home() {
           </div>
         )}
 
-        <section className="calculator" aria-labelledby="calculator-title">
+        <section className="calculator" aria-labelledby="calculator-title" ref={calculatorRef}>
           <div className="calculator-heading">
             <div>
               <p className="eyebrow">Conversor</p>
