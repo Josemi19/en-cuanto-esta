@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "En cuanto Esta",
+  title: "En Cuanto Esta",
   description: "Cotizaciones actualizadas de Venezuela."
 };
 
