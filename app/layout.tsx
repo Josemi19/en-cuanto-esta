@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "En Cuanto Esta",
-  description: "Cotizaciones actualizadas de Venezuela."
+  description: "Tasas cambiarias actualizadas de Venezuela."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
