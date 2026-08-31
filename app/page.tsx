@@ -150,9 +150,9 @@ export default function Home() {
             <span>En cuanto esta</span>
           </div>
           <div className="header-actions">
-            <button className="calculator-link" onClick={scrollToCalculator} type="button">
+            {/* <button className="calculator-link" onClick={scrollToCalculator} type="button">
               Conversor
-            </button>
+            </button> */}
             <button
               className="refresh"
               onClick={handleRefresh}
