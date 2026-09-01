@@ -150,13 +150,6 @@ export default function Home() {
     void loadQuotes();
   }
 
-  function scrollToCalculator() {
-    calculatorRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }
-
   return (
     <main>
       <section className="shell" aria-labelledby="page-title">
@@ -168,13 +161,6 @@ export default function Home() {
             <span>En cuanto esta</span>
           </div>
           <div className="header-actions">
-            <button
-              className="calculator-link"
-              onClick={scrollToCalculator}
-              type="button"
-            >
-              Conversor
-            </button>
             <button
               className="refresh"
               onClick={handleRefresh}
@@ -197,44 +183,6 @@ export default function Home() {
           <p className="eyebrow">Venezuela</p>
           <h1 id="page-title">Tasas del dia</h1>
         </div>
-
-        {error ? (
-          <div className="notice" role="alert">
-            <strong>Sin datos por ahora.</strong>
-            <span>{error}</span>
-            <button onClick={() => void loadQuotes()}>Reintentar</button>
-          </div>
-        ) : (
-          <div className="quotes" aria-live="polite">
-            {isLoading && quotes.length === 0
-              ? Array.from({ length: 2 }).map((_, index) => (
-                  <div className="quote skeleton" key={index} />
-                ))
-              : quotes.map((quote) => (
-                  <article
-                    className="quote"
-                    key={`${quote.moneda}-${quote.fuente}`}
-                  >
-                    <div className="quote-head">
-                      <div>
-                        <p className="currency">{quote.moneda}</p>
-                        <h2>{quote.nombre}</h2>
-                      </div>
-                      <span className="source">
-                        {quote.fuente === "oficial"
-                          ? "Oficial (BCV)"
-                          : quote.fuente}
-                      </span>
-                    </div>
-                    <p className="average-label"></p>
-                    <p className="average">{formatValue(quote.promedio)}</p>
-                    <time dateTime={quote.fechaActualizacion}>
-                      Actualizado: {formatDate(quote.fechaActualizacion)}
-                    </time>
-                  </article>
-                ))}
-          </div>
-        )}
 
         <section
           className="calculator"
@@ -337,6 +285,44 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {error ? (
+          <div className="notice" role="alert">
+            <strong>Sin datos por ahora.</strong>
+            <span>{error}</span>
+            <button onClick={() => void loadQuotes()}>Reintentar</button>
+          </div>
+        ) : (
+          <div className="quotes" aria-live="polite">
+            {isLoading && quotes.length === 0
+              ? Array.from({ length: 2 }).map((_, index) => (
+                  <div className="quote skeleton" key={index} />
+                ))
+              : quotes.map((quote) => (
+                  <article
+                    className="quote"
+                    key={`${quote.moneda}-${quote.fuente}`}
+                  >
+                    <div className="quote-head">
+                      <div>
+                        <p className="currency">{quote.moneda}</p>
+                        <h2>{quote.nombre}</h2>
+                      </div>
+                      <span className="source">
+                        {quote.fuente === "oficial"
+                          ? "Oficial (BCV)"
+                          : quote.fuente}
+                      </span>
+                    </div>
+                    <p className="average-label"></p>
+                    <p className="average">{formatValue(quote.promedio)}</p>
+                    <time dateTime={quote.fechaActualizacion}>
+                      Actualizado: {formatDate(quote.fechaActualizacion)}
+                    </time>
+                  </article>
+                ))}
+          </div>
+        )}
       </section>
     </main>
   );

@@ -7,7 +7,7 @@ const currencyPaths = {
 };
 const BINANCE_P2P_URL = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search";
 
-function getCaracasDate() {
+function getCaracasDate(retry = false) {
   const formatter = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Caracas",
     year: "numeric",
@@ -19,7 +19,7 @@ function getCaracasDate() {
   const parts = Object.fromEntries(formatter.formatToParts().map(({ type, value }) => [type, value]));
   const date = new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
 
-  if (Number(parts.hour) >= 19) {
+  if (Number(parts.hour) >= 19 && !retry) {
     date.setUTCDate(date.getUTCDate() + 1);
   }
 
@@ -65,6 +65,20 @@ export async function GET(request) {
     const response = await fetch(`${API_BASE_URL}/${currencyPaths[currency]}/oficial/${date}`, { cache: "no-store" });
 
     if (!response.ok) {
+      if (response.status === 404) {
+        const retryDate = getCaracasDate(true);
+        const retryResponse = await fetch(`${API_BASE_URL}/${currencyPaths[currency]}/oficial/${retryDate}`, { cache: "no-store" });
+        if (!retryResponse.ok) {
+          return NextResponse.json({ message: "No fue posible consultar las cotizaciones." }, { status: 502 });
+        }
+        const quote = await retryResponse.json();
+        return NextResponse.json({
+          ...quote,
+          moneda: currency,
+          nombre: currency === "USD" ? "Dólar" : "Euro",
+          fechaActualizacion: new Date().toISOString()
+        });
+      }
       return NextResponse.json({ message: "No fue posible consultar las cotizaciones." }, { status: 502 });
     }
 
@@ -75,7 +89,8 @@ export async function GET(request) {
       nombre: currency === "USD" ? "Dólar" : "Euro",
       fechaActualizacion: new Date().toISOString()
     });
-  } catch {
+  } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: "No fue posible conectar con el servicio." }, { status: 503 });
   }
 }
