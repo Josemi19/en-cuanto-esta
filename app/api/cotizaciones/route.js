@@ -4,7 +4,7 @@ const API_BASE_URL = "https://ve.dolarapi.com/v1/historicos";
 const currencyPaths = {
   USD: "dolares",
   EUR: "euros"
-} as const;
+};
 
 function getCaracasDate() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -25,7 +25,7 @@ function getCaracasDate() {
   return `${date.getUTCFullYear()}/${String(date.getUTCMonth() + 1).padStart(2, "0")}/${String(date.getUTCDate()).padStart(2, "0")}`;
 }
 
-export async function GET(request: Request) {
+export async function GET(request) {
   const currency = new URL(request.url).searchParams.get("moneda")?.toUpperCase();
 
   if (currency !== "USD" && currency !== "EUR") {
