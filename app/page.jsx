@@ -29,8 +29,9 @@ function formatCentAmount(value) {
   const paddedDigits = normalizedDigits.padStart(3, "0");
   const wholeAmount = paddedDigits.slice(0, -2);
   const decimalAmount = paddedDigits.slice(-2);
+  const formattedWholeAmount = Number(wholeAmount).toLocaleString("es-VE");
 
-  return `${Number(wholeAmount)}.${decimalAmount}`;
+  return `${formattedWholeAmount},${decimalAmount}`;
 }
 
 function parseCentAmount(value) {
@@ -55,7 +56,7 @@ export default function Home() {
   const [secondsRemaining, setSecondsRemaining] = useState(0);
   const [calculatorMode, setCalculatorMode] = useState("USD");
   const [conversionDirection, setConversionDirection] = useState("toBs");
-  const [amount, setAmount] = useState("0.00");
+  const [amount, setAmount] = useState("0,00");
   const [customRate, setCustomRate] = useState("");
   const calculatorRef = useRef(null);
 
@@ -93,6 +94,7 @@ export default function Home() {
       const responses = await Promise.all([
         fetch("/api/cotizaciones?moneda=USD"),
         fetch("/api/cotizaciones?moneda=EUR"),
+        fetch("/api/cotizaciones?moneda=USDT"),
       ]);
       if (responses.some((response) => !response.ok))
         throw new Error("Request failed");
@@ -166,9 +168,13 @@ export default function Home() {
             <span>En cuanto esta</span>
           </div>
           <div className="header-actions">
-            {/* <button className="calculator-link" onClick={scrollToCalculator} type="button">
+            <button
+              className="calculator-link"
+              onClick={scrollToCalculator}
+              type="button"
+            >
               Conversor
-            </button> */}
+            </button>
             <button
               className="refresh"
               onClick={handleRefresh}
@@ -214,7 +220,11 @@ export default function Home() {
                         <p className="currency">{quote.moneda}</p>
                         <h2>{quote.nombre}</h2>
                       </div>
-                      <span className="source">{`${quote.fuente} (BCV)`}</span>
+                      <span className="source">
+                        {quote.fuente === "oficial"
+                          ? "Oficial (BCV)"
+                          : quote.fuente}
+                      </span>
                     </div>
                     <p className="average-label"></p>
                     <p className="average">{formatValue(quote.promedio)}</p>
@@ -244,7 +254,7 @@ export default function Home() {
           </div>
 
           <div className="mode-picker" role="group" aria-label="Tipo de tasa">
-            {["USD", "EUR", "custom"].map((mode) => (
+            {["USD", "EUR", "USDT", "custom"].map((mode) => (
               <button
                 className={calculatorMode === mode ? "mode active" : "mode"}
                 key={mode}
@@ -289,7 +299,7 @@ export default function Home() {
                   onChange={(event) =>
                     setAmount(formatCentAmount(event.target.value))
                   }
-                  placeholder="0.00"
+                  placeholder="0,00"
                   type="text"
                   value={amount}
                 />
@@ -312,7 +322,7 @@ export default function Home() {
                     onChange={(event) =>
                       setCustomRate(formatCentAmount(event.target.value))
                     }
-                    placeholder="0.00"
+                    placeholder="0,00"
                     type="text"
                     value={customRate}
                   />

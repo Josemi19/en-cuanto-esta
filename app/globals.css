@@ -94,7 +94,6 @@ button {
 }
 
 .calculator-link {
-    display: none;
     padding: 9px 12px;
     border: 1px solid #b9cbc6;
     border-radius: 7px;
@@ -438,11 +437,18 @@ footer {
     .calculator-link {
         display: inline-flex;
         align-items: center;
+        padding: 7px 9px;
+        font-size: 10px;
     }
 
     .refresh {
-        padding-right: 10px;
-        padding-left: 10px;
+        gap: 4px;
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
+    .refresh span {
+        font-size: 12px;
     }
 
     .calculator {
@@ -462,6 +468,13 @@ footer {
     .mode {
         flex: 1;
         min-width: 0;
+        padding: 7px 5px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .mode:last-child {
+        flex: 1.45;
     }
 
     .calculator-fields {
