@@ -659,7 +659,6 @@ footer {
 
     .rate-row {
         align-items: end;
-        flex-wrap: wrap;
     }
 
     .rate-field,
