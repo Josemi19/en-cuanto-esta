@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useQuotes } from "./quotes-context";
 
 const valueFormatter = new Intl.NumberFormat("es-VE", {
   minimumFractionDigits: 2,
@@ -47,10 +49,7 @@ function formatForeignValue(value, currency) {
 }
 
 export default function Home() {
-  const [quotes, setQuotes] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const { quotes, isLoading, error, loadQuotes } = useQuotes();
   const [refreshClicks, setRefreshClicks] = useState(0);
   const [lockedUntil, setLockedUntil] = useState(null);
   const [secondsRemaining, setSecondsRemaining] = useState(0);
@@ -85,35 +84,6 @@ export default function Home() {
       : conversionDirection === "toBs"
         ? "Bs. 0,00"
         : formatForeignValue(0, currencyLabel);
-
-  async function loadQuotes() {
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const responses = await Promise.all([
-        fetch("/api/cotizaciones?moneda=USD"),
-        fetch("/api/cotizaciones?moneda=EUR"),
-        fetch("/api/cotizaciones?moneda=USDT"),
-      ]);
-      if (responses.some((response) => !response.ok))
-        throw new Error("Request failed");
-
-      const data = await Promise.all(
-        responses.map((response) => response.json()),
-      );
-      setQuotes(data);
-      setLastUpdated(new Date());
-    } catch {
-      setError("No pudimos cargar las cotizaciones. Intenta de nuevo.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadQuotes();
-  }, []);
 
   useEffect(() => {
     if (lockedUntil === null) return;
@@ -161,6 +131,9 @@ export default function Home() {
             <span>En cuanto esta</span>
           </div>
           <div className="header-actions">
+            <Link className="average-link" href="/promedios">
+              Promedios
+            </Link>
             <button
               className="refresh"
               onClick={handleRefresh}

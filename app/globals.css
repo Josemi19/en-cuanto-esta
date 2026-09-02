@@ -108,6 +108,25 @@ button {
     background: #e1f0ea;
 }
 
+.average-link,
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 12px;
+    border: 1px solid #b9cbc6;
+    border-radius: 7px;
+    color: var(--green-dark);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.average-link:hover,
+.back-link:hover {
+    border-color: var(--green);
+    background: #e1f0ea;
+}
+
 button:disabled {
     cursor: wait;
     opacity: .55;
@@ -425,6 +444,179 @@ footer {
     font-size: 20px;
 }
 
+.average-page {
+    max-width: 700px;
+}
+
+.average-tool {
+    padding: 26px;
+    border: 1px solid #b9d7cc;
+    border-radius: 8px;
+    background: #f8fcfa;
+}
+
+.rate-list {
+    display: grid;
+    gap: 14px;
+}
+
+.rate-row {
+    display: flex;
+    align-items: end;
+    gap: 9px;
+}
+
+.rate-field {
+    flex: 1;
+}
+
+.custom-rate-field {
+    flex: 1;
+}
+
+.rate-selector {
+    position: relative;
+}
+
+.rate-selector-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid #c9d9d4;
+    border-radius: 6px;
+    outline: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: "Manrope", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.rate-selector-button:focus-visible {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(20, 125, 100, .12);
+}
+
+.rate-selector-arrow {
+    color: var(--green-dark);
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rate-options {
+    position: absolute;
+    z-index: 2;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    padding: 4px;
+    border: 1px solid #b9d7cc;
+    border-radius: 6px;
+    background: var(--paper);
+    box-shadow: 0 8px 20px rgba(25, 62, 52, .12);
+}
+
+.rate-option {
+    display: block;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 4px;
+    color: var(--ink);
+    font-family: "Manrope", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    background: transparent;
+    margin: 5px 0;
+}
+
+.rate-option:hover,
+.rate-option:focus-visible {
+    background: rgba(20, 125, 100, .14);
+    outline: 0;
+}
+
+.rate-option.active {
+    color: var(--paper);
+    background: var(--green);
+}
+
+.selected-rate {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--green-dark);
+    background: var(--paper);
+    font-family: "DM Mono", monospace;
+    font-size: 13px;
+}
+
+.remove-rate {
+    display: grid;
+    width: 38px;
+    height: 48px;
+    place-items: center;
+    border: 1px solid #d8b8ad;
+    border-radius: 6px;
+    color: #8a3b28;
+    background: #fff7f4;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.add-rate {
+    margin-top: 18px;
+    padding: 8px 0;
+    border: 0;
+    color: var(--green-dark);
+    background: transparent;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.add-rate:hover {
+    color: var(--green);
+}
+
+.average-result {
+    display: grid;
+    gap: 5px;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+.average-result span,
+.average-result small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.average-result strong {
+    color: var(--green-dark);
+    font-family: "DM Mono", monospace;
+    font-size: 30px;
+}
+
+.average-error {
+    margin: 18px 0 0;
+    color: #803923;
+    font-size: 13px;
+}
+
 @media (max-width: 620px) {
     main {
         padding: 20px 16px;
@@ -451,8 +643,33 @@ footer {
         font-size: 12px;
     }
 
+    .average-link,
+    .back-link {
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
     .calculator {
         padding: 21px;
+    }
+
+    .average-tool {
+        padding: 21px;
+    }
+
+    .rate-row {
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
+    .rate-field,
+    .custom-rate-field,
+    .selected-rate {
+        flex: 1 1 145px;
+    }
+
+    .remove-rate {
+        align-self: end;
     }
 
     .calculator-heading {
@@ -493,5 +710,9 @@ footer {
 
     .average-label {
         margin-top: 30px;
+    }
+
+    h1 {
+        font-size: 24px;
     }
 }

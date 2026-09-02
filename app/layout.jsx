@@ -1,4 +1,5 @@
 import "./globals.css";
+import { QuotesProvider } from "./quotes-context";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -25,7 +26,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <QuotesProvider>{children}</QuotesProvider>
+      </body>
     </html>
   );
 }
