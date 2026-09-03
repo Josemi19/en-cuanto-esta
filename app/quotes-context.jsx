@@ -17,15 +17,12 @@ export function QuotesProvider({ children }) {
     try {
       const responses = await Promise.all([
         fetch("/api/cotizaciones?moneda=USD"),
-        fetch("/api/cotizaciones?moneda=EUR"),
         fetch("/api/cotizaciones?moneda=USDT"),
       ]);
       if (responses.some((response) => !response.ok))
         throw new Error("Request failed");
 
-      setQuotes(
-        await Promise.all(responses.map((response) => response.json())),
-      );
+      setQuotes([...(await responses[0].json()), await responses[1].json()]);
       setLastUpdated(new Date());
     } catch {
       setError("No pudimos cargar las cotizaciones. Intenta de nuevo.");
