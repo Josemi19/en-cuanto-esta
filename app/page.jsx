@@ -154,11 +154,7 @@ export default function Home() {
 
         <div className="intro">
           <p className="eyebrow">Venezuela</p>
-          <h1 id="page-title">En cuanto esta el dolar hoy</h1>
-          <p>
-            Consulta la tasa del dólar BCV, el valor en bolívares y otras tasas
-            cambiarias de Venezuela actualizadas.
-          </p>
+          <h1 id="page-title">Tasas del dia</h1>
         </div>
 
         <section
