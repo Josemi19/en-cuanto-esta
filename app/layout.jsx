@@ -10,8 +10,49 @@ const siteUrl =
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
-  title: "En Cuanto Esta",
-  description: "Tasas cambiarias actualizadas de Venezuela.",
+  title: {
+    default: "En Cuanto Esta | Dólar BCV y tasas cambiarias de Venezuela",
+    template: "%s | En Cuanto Esta",
+  },
+  description:
+    "Consulta en cuanto esta el dolar hoy, la tasa del BCV y otras tasas cambiarias de Venezuela en bolivares.",
+  keywords: [
+    "en cuanto esta",
+    "en cuanto esta el dolar",
+    "en cuanto esta bcv",
+    "dolar bcv",
+    "bolivares",
+    "tasa cambiaria",
+    "tasa del dolar hoy",
+    "tasas cambiarias de Venezuela",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_VE",
+    url: "/",
+    siteName: "En Cuanto Esta",
+    title: "En Cuanto Esta | Dólar BCV y tasas cambiarias",
+    description:
+      "Consulta el dólar BCV, bolívares y otras tasas cambiarias de Venezuela.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "En Cuanto Esta | Dólar BCV y tasas cambiarias",
+    description: "Consulta el dólar BCV y otras tasas cambiarias de Venezuela.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: "/icon.svg",
