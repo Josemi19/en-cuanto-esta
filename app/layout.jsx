@@ -69,6 +69,35 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://en-cuanto-esta.app/#website",
+        url: "https://en-cuanto-esta.app",
+        name: "En Cuanto Esta",
+        description:
+          "Consulta en cuanto esta el dolar hoy, la tasa del BCV y otras tasas cambiarias de Venezuela.",
+        inLanguage: "es-VE",
+      },
+      {
+        "@type": "FinancialService",
+        "@id": "https://en-cuanto-esta.app/#financial-service",
+        name: "En Cuanto Esta - Tasas Cambiarias Venezuela",
+        url: "https://en-cuanto-esta.app",
+        logo: "https://en-cuanto-esta.app/icon-512.png",
+        description:
+          "Plataforma de consulta en tiempo real de la tasa oficial del Banco Central de Venezuela (BCV) y otras cotizaciones del dólar en bolívares.",
+        currenciesAccepted: "USD, VES",
+        areaServed: {
+          "@type": "Country",
+          name: "Venezuela",
+        },
+      },
+    ],
+  };
+
   return (
     <html lang="es">
       <head>
@@ -81,6 +110,10 @@ export default function RootLayout({ children }) {
       <body>
         <QuotesProvider>{children}</QuotesProvider>
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </body>
     </html>
   );
