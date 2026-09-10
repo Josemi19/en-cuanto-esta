@@ -87,9 +87,17 @@ export default function RootLayout({ children }) {
         name: "En Cuanto Esta - Tasas Cambiarias Venezuela",
         url: "https://en-cuanto-esta.app",
         logo: "https://en-cuanto-esta.app/icon-512.png",
+        image: "https://en-cuanto-esta.app/icon-512.png",
         description:
           "Plataforma de consulta en tiempo real de la tasa oficial del Banco Central de Venezuela (BCV) y otras cotizaciones del dólar en bolívares.",
         currenciesAccepted: "USD, VES",
+        priceRange: "$",
+        telephone: "+58-000-0000000",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "VE",
+          addressLocality: "Caracas",
+        },
         areaServed: {
           "@type": "Country",
           name: "Venezuela",
