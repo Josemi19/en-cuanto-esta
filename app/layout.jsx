@@ -10,6 +10,7 @@ const siteUrl =
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
+  applicationName: "En Cuanto Esta",
   title: {
     default: "En Cuanto Esta | Dólar BCV y tasas cambiarias de Venezuela",
     template: "%s | En Cuanto Esta",
@@ -85,6 +86,7 @@ export default function RootLayout({ children }) {
         "@type": "FinancialService",
         "@id": "https://en-cuanto-esta.app/#financial-service",
         name: "En Cuanto Esta - Tasas Cambiarias Venezuela",
+        alternateName: ["EnCuantoEsta", "En Cuanto Esta App"],
         url: "https://en-cuanto-esta.app",
         logo: "https://en-cuanto-esta.app/icon-512.png",
         image: "https://en-cuanto-esta.app/icon-512.png",
