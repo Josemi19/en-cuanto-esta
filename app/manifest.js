@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
     name: "En Cuanto Esta",
-    short_name: "En Cuanto",
+    short_name: "En Cuanto Esta",
     description: "Tasas cambiarias actualizadas de Venezuela.",
     start_url: "/",
     display: "standalone",
