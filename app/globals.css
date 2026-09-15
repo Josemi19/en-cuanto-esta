@@ -93,6 +93,13 @@ button {
     gap: 8px;
 }
 
+.install-message {
+    margin: -30px 0 30px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: right;
+}
+
 .calculator-link {
     padding: 9px 12px;
     border: 1px solid #b9cbc6;
@@ -442,6 +449,28 @@ footer {
     color: var(--green-dark);
     font-family: "DM Mono", monospace;
     font-size: 20px;
+}
+
+.result-value-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.copy-result {
+    width: fit-content;
+    padding: 5px 9px;
+    border: 1px solid #b9cbc6;
+    border-radius: 5px;
+    color: var(--green-dark);
+    background: transparent;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.copy-result:hover {
+    border-color: var(--green);
+    background: #e1f0ea;
 }
 
 .average-page {

@@ -12,8 +12,14 @@ export default function manifest() {
         src: "/icon.svg",
         sizes: "any",
         type: "image/svg+xml",
-        purpose: "any"
-      }
-    ]
+        purpose: "any",
+      },
+      {
+        src: "/icon-512.jpg",
+        sizes: "512x512",
+        type: "image/jpeg",
+        purpose: "any",
+      },
+    ],
   };
 }

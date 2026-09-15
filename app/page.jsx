@@ -50,16 +50,16 @@ function formatForeignValue(value, currency) {
 
 export default function Home() {
   const { quotes, isLoading, error, loadQuotes } = useQuotes();
-  const [refreshClicks, setRefreshClicks] = useState(0);
-  const [lockedUntil, setLockedUntil] = useState(null);
-  const [secondsRemaining, setSecondsRemaining] = useState(0);
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [installMessage, setInstallMessage] = useState("");
   const [calculatorMode, setCalculatorMode] = useState("USD");
   const [conversionDirection, setConversionDirection] = useState("toBs");
   const [amount, setAmount] = useState("0,00");
   const [customRate, setCustomRate] = useState("");
+  const [isResultCopied, setIsResultCopied] = useState(false);
   const calculatorRef = useRef(null);
 
-  const isRefreshLocked = lockedUntil !== null;
   const selectedQuote = quotes.find((quote) => quote.moneda === calculatorMode);
   const exchangeRate =
     calculatorMode === "custom"
@@ -86,38 +86,64 @@ export default function Home() {
         : formatForeignValue(0, currencyLabel);
 
   useEffect(() => {
-    if (lockedUntil === null) return;
-    const lockExpiresAt = lockedUntil;
+    if ("serviceWorker" in navigator) {
+      void navigator.serviceWorker.register("/sw.js");
+    }
 
-    function updateLock() {
-      const remaining = Math.max(
-        0,
-        Math.ceil((lockExpiresAt - Date.now()) / 1000),
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+    if (isStandalone) setIsInstalled(true);
+
+    function handleBeforeInstallPrompt(event) {
+      event.preventDefault();
+      setInstallPrompt(event);
+    }
+
+    function handleAppInstalled() {
+      setInstallPrompt(null);
+      setIsInstalled(true);
+      setInstallMessage("");
+    }
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt,
       );
-      setSecondsRemaining(remaining);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
 
-      if (remaining === 0) {
-        setLockedUntil(null);
-        setRefreshClicks(0);
-      }
+  async function handleInstall() {
+    if (isInstalled) return;
+
+    if (!installPrompt) {
+      const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+      setInstallMessage(
+        isIos
+          ? "En Safari: toca Compartir y luego Añadir a pantalla de inicio."
+          : "Abre el menú de tu navegador y selecciona Instalar aplicación.",
+      );
+      return;
     }
 
-    updateLock();
-    const intervalId = window.setInterval(updateLock, 1000);
-    return () => window.clearInterval(intervalId);
-  }, [lockedUntil]);
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === "accepted") setInstallPrompt(null);
+  }
 
-  function handleRefresh() {
-    if (isLoading || isRefreshLocked) return;
-
-    const nextClickCount = refreshClicks + 1;
-    setRefreshClicks(nextClickCount);
-
-    if (nextClickCount === 2) {
-      setLockedUntil(Date.now() + 60_000);
+  async function copyResult() {
+    try {
+      await navigator.clipboard.writeText(resultValue);
+      setIsResultCopied(true);
+      window.setTimeout(() => setIsResultCopied(false), 1800);
+    } catch {
+      setIsResultCopied(false);
     }
-
-    void loadQuotes();
   }
 
   return (
@@ -136,20 +162,21 @@ export default function Home() {
             </Link>
             <button
               className="refresh"
-              onClick={handleRefresh}
-              disabled={isLoading || isRefreshLocked}
+              onClick={handleInstall}
+              disabled={isInstalled}
               aria-label={
-                isRefreshLocked
-                  ? `Actualizaciones bloqueadas durante ${secondsRemaining} segundos`
-                  : "Actualizar cotizaciones"
+                isInstalled ? "Aplicación instalada" : "Instalar aplicación"
               }
             >
-              <span aria-hidden="true">&#8635;</span>
-              {isRefreshLocked
-                ? `Disponible en ${secondsRemaining}s`
-                : "Actualizar"}
+              <span aria-hidden="true">&#8615;</span>
+              {isInstalled ? "Instalada" : "Instalar app"}
             </button>
           </div>
+          {installMessage && (
+            <p className="install-message" role="status">
+              {installMessage}
+            </p>
+          )}
         </header>
 
         <div className="intro">
@@ -254,7 +281,17 @@ export default function Home() {
 
             <div className="conversion-result" aria-live="polite">
               <span>Equivale a</span>
-              <strong>{resultValue}</strong>
+              <div className="result-value-row">
+                <strong>{resultValue}</strong>
+                <button
+                  className="copy-result"
+                  onClick={copyResult}
+                  type="button"
+                  aria-label="Copiar resultado de la conversión"
+                >
+                  {isResultCopied ? "Copiado" : "Copiar"}
+                </button>
+              </div>
             </div>
           </div>
         </section>

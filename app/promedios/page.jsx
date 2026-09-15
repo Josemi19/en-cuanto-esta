@@ -118,6 +118,9 @@ export default function PromediosPage() {
     validRates.length >= 2
       ? validRates.reduce((total, rate) => total + rate, 0) / validRates.length
       : 0;
+  const averageResult =
+    average > 0 ? `Bs. ${money.format(average)}` : "Bs. 0,00";
+  const [isAverageCopied, setIsAverageCopied] = useState(false);
 
   function updateRate(index, field, value) {
     setRates((current) =>
@@ -130,6 +133,16 @@ export default function PromediosPage() {
           : rate,
       ),
     );
+  }
+
+  async function copyAverage() {
+    try {
+      await navigator.clipboard.writeText(averageResult);
+      setIsAverageCopied(true);
+      window.setTimeout(() => setIsAverageCopied(false), 1800);
+    } catch {
+      setIsAverageCopied(false);
+    }
   }
 
   return (
@@ -235,9 +248,17 @@ export default function PromediosPage() {
               Promedio de {validRates.length}{" "}
               {validRates.length === 1 ? "tasa" : "tasas"}
             </span>
-            <strong>
-              {average > 0 ? `Bs. ${money.format(average)}` : "Bs. 0,00"}
-            </strong>
+            <div className="result-value-row">
+              <strong>{averageResult}</strong>
+              <button
+                className="copy-result"
+                onClick={copyAverage}
+                type="button"
+                aria-label="Copiar resultado del promedio"
+              >
+                {isAverageCopied ? "Copiado" : "Copiar"}
+              </button>
+            </div>
             {validRates.length < 2 && (
               <small>
                 Ingresa {2 - validRates.length} tasa más para calcular el
