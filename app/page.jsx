@@ -138,7 +138,8 @@ export default function Home() {
 
   async function copyResult() {
     try {
-      await navigator.clipboard.writeText(resultValue);
+      const result = resultValue.replace(/[^0-9.,]/g, "");
+      await navigator.clipboard.writeText(result);
       setIsResultCopied(true);
       window.setTimeout(() => setIsResultCopied(false), 1800);
     } catch {
@@ -160,7 +161,7 @@ export default function Home() {
             <Link className="average-link" href="/promedios">
               Promedios
             </Link>
-            <button
+            {/* <button
               className="refresh"
               onClick={handleInstall}
               disabled={isInstalled}
@@ -170,7 +171,7 @@ export default function Home() {
             >
               <span aria-hidden="true">&#8615;</span>
               {isInstalled ? "Instalada" : "Instalar app"}
-            </button>
+            </button> */}
           </div>
           {installMessage && (
             <p className="install-message" role="status">
