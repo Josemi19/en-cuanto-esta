@@ -45,16 +45,18 @@ export async function getScraper() {
 
 function interpretarValorMonetario(valor) {
     const limpio = valor
-        .replace(/\s/g, '')
-        .replace(',', '.')
+        .replace(/[^\d.,-]/g, '')
+    const normalizado = limpio.includes(',')
+        ? limpio.replace(/\./g, '').replace(',', '.')
+        : limpio
 
-    return Number.parseFloat(limpio)
+    return Number.parseFloat(normalizado)
 }
 
 // Función cacheada que consumirán tus páginas y Server Components
 export const getCacheData = unstable_cache(
     async () => getScraper(),
-    ['scraper-data-key'],
+    ['scraper-data-key-v2'],
     {
         tags: ['datos-scraper'], // Etiqueta para revalidar la caché
     }
